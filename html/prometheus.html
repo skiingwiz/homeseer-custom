@@ -1,0 +1,8 @@
+{{- devices_local = (devices 0 true) -}}
+{{- from_epoch = date.to_string date.now "%s%L" -}}
+{{- for d in devices_local -}}
+homeseer_device{ref="{{d.ref}}", name="{{d.name}}", location="{{d.location}}", floor="{{d.location2}}", parent_name="none", parent_ref=""} {{ device_value d.ref }} {{from_epoch}}
+{{ for c in d.children -}}
+homeseer_device{ref="{{c.ref}}", name="{{c.name}}", location="{{c.location}}", floor="{{c.location2}}", parent_name="{{d.name}}", parent_ref="{{d.ref}}"} {{ device_value c.ref }} {{from_epoch}}
+{{ end -}}
+{{- end -}}
