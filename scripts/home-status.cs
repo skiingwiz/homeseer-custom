@@ -21,20 +21,22 @@ public object Main(object[] Parms)
             int status_value = 0;
             foreach(int r in catRefs)
             {
-                double val = hs4.GetDeviceByRef(r).Value;
-    //            if(good_values_by_ref.ContainsKey(r)) {
-                if(r == 827 || r == 957)
+                var dev = hs4.GetDeviceByRef(r);
+                if(dev != null)
                 {
-    //                if(val != good_values_by_ref[r]) {
-                    if(val != 23.0)
+                    double val = dev.Value;
+                    if(r == 827 || r == 957)
+                    {
+                        if(val != 23.0)
+                        {
+                            status_value = Math.Max(status_value, 1);
+                        }
+                    }
+                    else if(val > 0)
                     {
                         status_value = Math.Max(status_value, 1);
+                        break;
                     }
-                }
-                else if(val > 0)
-                {
-                    status_value = Math.Max(status_value, 1);
-                    break;
                 }
             }
             hs.UpdateFeatureValueByRef(statusRef, status_value);
